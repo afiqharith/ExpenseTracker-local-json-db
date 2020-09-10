@@ -4,10 +4,10 @@ __date__ = "09 Sep 2020"
 __status__ = "Development"
 
 '''
-1.use variable = json.load(alljsonitems)
-2. from 1 get date or get id
-3. variable.update(newitems) to update new component
-4. after that, json.dump(alljsonitems) for inserting new components
+1. check date on json
+2. check id on json
+3. update self id on json
+
 '''
 
 import json
@@ -29,8 +29,13 @@ class MainProgram():
 
     def retrive_components_from_json(self):
         with open('db.json') as file:
-            current_db_components = json.load(file)
-            return current_db_components
+            try:
+                current_db_components = json.load(file)
+                print('\n[STATUS] Loading components from JSON.')
+                return current_db_components
+            except:
+                print('\n[ERROR] Unable to load components from JSON.')
+               
 
     def check_file_is_empty(self):
         with open('db.json') as file:
@@ -81,16 +86,25 @@ class MainProgram():
             return components
     
     def save_new_component_into_json(self):
+        current_db_components = self.retrive_components_from_json()
         new_components = self.sort_components()
-        # print(new_components)
-
-        with open('db.json') as file:
-            current_db_components = json.load(file)
+        
+        try:
             current_db_components.update(new_components)
-            print(current_db_components)
+            to_save_components = current_db_components
+            print('\n[STATUS] Succeed updating new components.')
 
-            with open('db.json', 'w') as file:
-                json.dump(current_db_components, file)
+        except:
+            print('\n[ERROR] Unable to update new components.')
+
+        finally:
+            try:
+                with open('db.json', 'w') as file:
+                    json.dump(to_save_components, file)
+                print('\n[STATUS] Succeed overwrite new components into JSON.')
+            except:
+                print('\n[ERROR] Unable to save components into JSON.')
+                print('[WARNING] Components deleted. Please check JSON file.\n')
 
     def delete_components_from_json(self):
         pass
@@ -100,6 +114,7 @@ class MainProgram():
 
     def start_main_program(self):
         self.save_new_component_into_json()
+        # self.retrive_components_from_json()
         pass
 
 
