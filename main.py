@@ -72,7 +72,6 @@ class MainProgram():
                     }
                 }
             }
-            return components
 
         if self.check_current_file_date() == True:
             components = {
@@ -83,7 +82,7 @@ class MainProgram():
                 }
             }
 
-            return components
+        return components
     
     def save_new_component_into_json(self):
         current_db_components = self.retrive_components_from_json()
