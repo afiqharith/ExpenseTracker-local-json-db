@@ -117,8 +117,6 @@ class MainProgram():
         pass
 
 
-
-
 def main():
     location_from_input = 'Jasin'
     items_from_input = 'Food'
