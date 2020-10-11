@@ -12,7 +12,7 @@ __status__ = "Development"
 
 import json
 from datetime import datetime
-from pipeline import Pipeline
+from pipeline import Pipeline as pl
 
 DATABASE = 'db.json'
 current = datetime.now()
@@ -27,15 +27,16 @@ class MainProgram:
         
         if self.program_status == True:
             self.save_new_component_into_json()
+            print('[UPDATED]')
 
     def retrive_components_from_json(self):
-        return Pipeline.GetFromFile(DATABASE)
+        return pl.GetFromFile(DATABASE)
         
     def check_file_is_empty(self):
-        return Pipeline.checkFile(DATABASE)
+        return pl.checkFile(DATABASE)
 
     def check_current_file_date(self):
-        return Pipeline.latestFileDate(DATABASE,'07 Sep 2020')
+        return pl.latestFileDate(DATABASE,'07 Sep 2020')
     
     def check_current_id(self): #update this
         u = '1'
@@ -44,10 +45,10 @@ class MainProgram:
 
     def sort_components(self):
         if self.check_current_file_date() == False:
-            components = Pipeline.CompoSortWithDate(self.date, self.check_current_id(), self.location, self.items, self.prices)
+            components = pl.CompoSortWithDate(self.date, self.check_current_id(), self.location, self.items, self.prices)
 
         if self.check_current_file_date() == True:
-            components = Pipeline.CompoSortNoDate(self.check_current_id(), self.location, self.items, self.prices)
+            components = pl.CompoSortNoDate(self.check_current_id(), self.location, self.items, self.prices)
         return components
     
     def save_new_component_into_json(self):
