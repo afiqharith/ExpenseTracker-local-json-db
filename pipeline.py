@@ -27,9 +27,15 @@ class Pipeline(object):
             else: 
                 return False
 
-    def componentsSort(ID,DATE,LOCATION,ITEMS,PRICES,STAT):
-        if STAT == False:
-            components = { DATE : { 'Data' : { ID : { 'Location' : LOCATION, 'Items' : ITEMS, 'Prices' : PRICES }}}}
-        if STAT == True:
-            components = { ID : { 'Location' : LOCATION, 'Items' : ITEMS, 'Prices' : PRICES }}
+    def ComposSortNoDate(ID, LOCATION, ITEMS, PRICES):
+        components = { ID : { 'Location' : LOCATION, 'Items' : ITEMS, 'Prices' : PRICES }}
         return components
+
+    def CompoSortWithDate(DATE, ID, LOCATION, ITEMS, PRICES):
+        components = { DATE : { 'Data' : { ID : { 'Location' : LOCATION, 'Items' : ITEMS, 'Prices' : PRICES }}}}
+        return components
+
+    def GetFromFile(DATABASE):
+        with open(DATABASE) as file:
+            components = json.load(file)
+            return components

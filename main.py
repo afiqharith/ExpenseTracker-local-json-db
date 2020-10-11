@@ -29,37 +29,13 @@ class MainProgram:
             self.save_new_component_into_json()
 
     def retrive_components_from_json(self):
-        with open(DATABASE) as file:
-            try:
-                current_db_components = json.load(file)
-                print('\n[STATUS] Loading components from JSON.')
-                return current_db_components
-            except:
-                print('\n[ERROR] Unable to load components from JSON.')
-               
-
+        return Pipeline.GetFromFile(DATABASE)
+        
     def check_file_is_empty(self):
-        result = Pipeline.checkFile(DATABASE)
-        return result
+        return Pipeline.checkFile(DATABASE)
 
-        # with open(DATABASE) as file:
-        #     if file.read() == '':
-        #         return False
-        #     else:
-        #         return True
-    
     def check_current_file_date(self):
-        result_date = Pipeline.latestFileDate(DATABASE,'07 Sep 2020')
-        return result_date
-
-        # with open(DATABASE) as file:
-        #     file_date = json.load(file)
-        #     file_current_date = file_date.get('07 Sep 2020') #update this
-
-        #     if file_current_date == self.date:
-        #         return True
-        #     else:
-        #         return False
+        return Pipeline.latestFileDate(DATABASE,'07 Sep 2020')
     
     def check_current_id(self): #update this
         u = '1'
@@ -68,49 +44,21 @@ class MainProgram:
 
     def sort_components(self):
         if self.check_current_file_date() == False:
-            components = {
-                self.date : {
-                    'Data' : {
-                        self.check_current_id() : {
-                            'Location' : self.location,
-                            'Items' : self.items,
-                            'Prices' : self.prices
-                        }
-                    }
-                }
-            }
+            components = Pipeline.CompoSortWithDate(self.date, self.check_current_id(), self.location, self.items, self.prices)
 
         if self.check_current_file_date() == True:
-            components = {
-                self.check_current_id(): {
-                    'Location' : self.location,
-                    'Items' : self.items,
-                    'Prices' : self.prices
-                }
-            }
-
+            components = Pipeline.CompoSortNoDate(self.check_current_id(), self.location, self.items, self.prices)
         return components
     
     def save_new_component_into_json(self):
         current_db_components = self.retrive_components_from_json()
         new_components = self.sort_components()
-        
-        try:
-            current_db_components.update(new_components)
-            to_save_components = current_db_components
-            print('\n[STATUS] Succeed updating new components.')
+        current_db_components.update(new_components)
+        to_save_components = current_db_components
 
-        except:
-            print('\n[ERROR] Unable to update new components.')
+        with open(DATABASE, 'w') as file:
+            json.dump(to_save_components, file)
 
-        finally:
-            try:
-                with open(DATABASE, 'w') as file:
-                    json.dump(to_save_components, file)
-                print('\n[STATUS] Succeed overwrite new components into JSON.')
-            except:
-                print('\n[ERROR] Unable to save components into JSON.')
-                print('[WARNING] Components deleted. Please check JSON file.\n')
 
     def delete_components_from_json(self):
         pass
